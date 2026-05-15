@@ -133,10 +133,11 @@ public class GradeCalculatorTest {
 
     // TODO: Write a test for a student with semester mark of 42
     // (between the buggy threshold of 45 and correct threshold of 40)
+    // Done
     @Test
     public void testExamAdmission_Between40And45() {
         // YOUR CODE HERE
-        fail("TODO: Implement this test");
+        assertTrue(calculator.hasExamAdmission(42));
     }
 
     // =====================================================================
@@ -163,11 +164,13 @@ public class GradeCalculatorTest {
     }
 
     // TODO: Write a test for class average with 5 students
+    // Done
     @Test
     public void testClassAverage_FiveStudents() {
         // YOUR CODE HERE — use marks: 45, 55, 65, 75, 85
+        double[] marks = {45, 55, 65, 75, 85};
         // Expected average: 65.0
-        fail("TODO: Implement this test");
+        assertEquals(65.0, calculator.calculateClassAverage(marks), 0.01);
     }
 
     // =====================================================================
@@ -180,21 +183,23 @@ public class GradeCalculatorTest {
         double[] marks = {60, 70, 80, 90};
         // 4 out of 4 pass = 100% → 1.0 as a ratio, but we want percentage
         // Pass rate should be 100.0 (as percentage)
-        assertEquals(100.0, calculator.calculatePassRate(marks) * 100, 0.01);
+        assertEquals(100.0, calculator.calculatePassRate(marks), 0.01);
     }
 
     @Test
     public void testPassRate_MixedResults() {
         double[] marks = {30, 45, 50, 65, 80};
         // Students with >= 50: 50, 65, 80 = 3 out of 5 = 0.6
-        assertEquals(0.6, calculator.calculatePassRate(marks), 0.01);
+        assertEquals(60.0, calculator.calculatePassRate(marks), 0.01);
     }
 
     // TODO: Write a test for pass rate where no students pass
+    // Done
     @Test
     public void testPassRate_NonePass() {
         // YOUR CODE HERE
-        fail("TODO: Implement this test");
+        double[] marks = {10, 20, 30, 40, 49};
+        assertEquals(0.0, calculator.calculatePassRate(marks), 0.01);
     }
 
     // =====================================================================
@@ -214,10 +219,12 @@ public class GradeCalculatorTest {
     }
 
     // TODO: Write a test where highest mark is at the beginning of the array
+    // Done
     @Test
     public void testHighestMark_FirstElement() {
         // YOUR CODE HERE
-        fail("TODO: Implement this test");
+        double[] marks = {91, 55, 78, 62, 45};
+        assertEquals(91.0, calculator.findHighestMark(marks), 0.01);
     }
 
     // =====================================================================
@@ -281,9 +288,10 @@ public class GradeCalculatorTest {
     }
 
     // TODO: Write a test for mark value of 105 (should be invalid)
+    // Done
     @Test
     public void testValidMark_WayOver100() {
         // YOUR CODE HERE
-        fail("TODO: Implement this test");
+        assertFalse(calculator.isValidMark(105));
     }
 }
