@@ -26,10 +26,11 @@ public class GradeCalculator {
     /**
      * BUG #1: Weight calculation is swapped
      * Semester mark should be 40% and exam should be 60%,
-     * but the weights are reversed here.
+     * but the weights are reversed here. 
+     * Fixed
      */
     public double calculateFinalMark(double semesterMark, double examMark) {
-        double finalMark = (semesterMark * 0.6) + (examMark * 0.4);
+        double finalMark = (semesterMark * 0.4) + (examMark * 0.6);
         return Math.round(finalMark * 100.0) / 100.0;
     }
 
@@ -38,15 +39,16 @@ public class GradeCalculator {
      * - Distinction should be >= 80, but uses > 80 (misses exactly 80)
      * - Pass boundary uses >= 55 instead of >= 50
      * - Merit and Credit boundaries are also shifted
+     * Fixed
      */
     public String determineGrade(double finalMark) {
-        if (finalMark > 80) {
+        if (finalMark >= 80) {
             return "Distinction";
-        } else if (finalMark >= 75) {
+        } else if (finalMark >= 70) {
             return "Merit";
-        } else if (finalMark >= 65) {
+        } else if (finalMark >= 60) {
             return "Credit";
-        } else if (finalMark >= 55) {
+        } else if (finalMark >= 50) {
             return "Pass";
         } else {
             return "Fail";
@@ -56,14 +58,16 @@ public class GradeCalculator {
     /**
      * BUG #3: Admission check uses wrong threshold
      * Should require >= 40 for exam admission, but uses >= 45
+     * Fixed
      */
     public boolean hasExamAdmission(double semesterMark) {
-        return semesterMark >= 45;
+        return semesterMark >= 40;
     }
 
     /**
      * BUG #4: Average calculation has off-by-one error
      * Divides by (marks.length + 1) instead of marks.length
+     * Fixed
      */
     public double calculateClassAverage(double[] marks) {
         if (marks == null || marks.length == 0) {
@@ -73,12 +77,13 @@ public class GradeCalculator {
         for (double mark : marks) {
             total += mark;
         }
-        return Math.round((total / (marks.length + 1)) * 100.0) / 100.0;
+        return Math.round((total / (marks.length)) * 100.0) / 100.0;
     }
 
     /**
      * BUG #5: Pass rate calculation divides by total instead of multiplying by 100
      * Also uses wrong threshold (>= 55 instead of >= 50)
+     * Fixed
      */
     public double calculatePassRate(double[] finalMarks) {
         if (finalMarks == null || finalMarks.length == 0) {
@@ -86,16 +91,18 @@ public class GradeCalculator {
         }
         int passCount = 0;
         for (double mark : finalMarks) {
-            if (mark >= 55) {
+            if (mark >= 50) {
                 passCount++;
             }
         }
-        return Math.round(((double) passCount / finalMarks.length) * 100.0) / 100.0;
+        double rate = ((double) passCount / finalMarks.length) * 100.0;
+        return Math.round(rate * 100.0) / 100.0;
     }
 
     /**
      * BUG #6: Highest mark finder returns lowest instead
      * Uses < comparison instead of >
+     * Fixed
      */
     public double findHighestMark(double[] marks) {
         if (marks == null || marks.length == 0) {
@@ -103,7 +110,7 @@ public class GradeCalculator {
         }
         double highest = marks[0];
         for (int i = 1; i < marks.length; i++) {
-            if (marks[i] < highest) {
+            if (marks[i] > highest) {
                 highest = marks[i];
             }
         }
@@ -114,24 +121,27 @@ public class GradeCalculator {
      * BUG #7: Supplementary exam eligibility check is wrong
      * A student qualifies for a supplementary if their final mark is 
      * between 45 and 49 (inclusive), but this method checks 40-44
+     * Fixed
      */
     public boolean qualifiesForSupplementary(double finalMark) {
-        return finalMark >= 40 && finalMark <= 44;
+        return finalMark >= 45 && finalMark <= 49;
     }
 
     /**
      * BUG #8: Mark validation allows marks over 100 and below 0
      * Should return false for marks < 0 or > 100
      * Currently returns true for any value
+     * Fixed
      */
     public boolean isValidMark(double mark) {
-        return mark >= -10 && mark <= 110;
+        return mark >= 0 && mark <= 100;
     }
 
     /**
      * Returns a formatted student report string
      * Contains BUG #9: Report shows "ADMITTED" even when student is NOT admitted
      * (the condition is inverted)
+     * Fixed
      */
     public String generateStudentReport(String studentName, double semesterMark, double examMark) {
         StringBuilder report = new StringBuilder();
@@ -140,7 +150,7 @@ public class GradeCalculator {
         report.append("Semester Mark: ").append(semesterMark).append("\n");
 
         // BUG: Condition is inverted - shows ADMITTED when NOT admitted
-        if (!hasExamAdmission(semesterMark)) {
+        if (hasExamAdmission(semesterMark)) {
             report.append("Exam Admission: ADMITTED\n");
             report.append("Exam Mark: ").append(examMark).append("\n");
             double finalMark = calculateFinalMark(semesterMark, examMark);
