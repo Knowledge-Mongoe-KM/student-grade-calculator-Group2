@@ -9,6 +9,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    permissions: 
+          contents : read 
+
     steps:
       # 1. Get code
       - name: Checkout repository
@@ -23,8 +26,8 @@ jobs:
 
       # 3. Build project
       - name: Build with Maven
-        run: mvn clean package
+        run: mvn clean install
 
       # 4. Trigger Render deployment
       - name: Trigger Render Deploy Hook
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
